@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>jQuery返回顶部插件</title>
+<title>返回顶部插件</title>
 <style>
 body { height: 2dddpx; line-height: 2;}
 .dowebok { width: 728px; margin-left: auto; margin-right: auto;}
@@ -12,7 +12,7 @@ body { height: 2dddpx; line-height: 2;}
 .dowebok table { width: 100%; border-spacing: 0; border-collapse: collapse;}
 .dowebok th, .dowebok td { padding: 5px 10px; border: 1px solid #ddd;}
 .dowebok tr:nth-child(2n) { background-color: #f8f8f8;}
-.to-top { display: none; padding: 0 20px; color: #fff; background-color: #f50;}
+.to-top { display: none;width: 40px;height: 40px;position: fixed;right: 50px;bottom: 30px; background-color:#f03;cursor:pointer;}
 
 .vad { margin: 100px 0 10px; font-family: Consolas,arial,宋体,sans-serif; text-align:center;}
 .vad a { display: inline-block; height: 36px; line-height: 36px; margin: 0 5px; padding: 0 50px; font-size: 14px; text-align:center; color:#eee; text-decoration: none; background-color: #222;}
@@ -23,7 +23,7 @@ body { height: 2dddpx; line-height: 2;}
 
 <body>
 <div class="dowebok">
-	<h1>jQuery返回顶部插件</h1>
+	<h1>返回顶部插件</h1>
 	
 	<h2>简介</h2>
 	<p>jQuery.toTop 是一款轻量级的 jQuery 返回顶部插件，压缩后不到 1KB。同时它也是可定制的，你可以设置是否自动隐藏、滚动时间、位置等等。</p>
@@ -99,15 +99,49 @@ body { height: 2dddpx; line-height: 2;}
 	</ul>
 </div>
 
-<a class="to-top">Top</a>
+<a class="to-top" id="btn">Top</a>
 
-<!--<script src="js/jquery-1.11.3.min.js"></script>-->
-<script src="js/zepto.min.js"></script>
-<script src="js/jquery.toTop.js"></script>
 <script>
-	$(function() {
-		$('.to-top').toTop();
-	})
+	window.onload=function(){
+	var obtn= document.getElementById("btn");
+		//文档高度
+		var clientHeight=document.documentElement.clientHeight;
+		var time=null;
+		var isTop=true,
+			cancelScroll = false;
+
+		window.onscroll = function(){
+
+			var osTop=document.documentElement.scrollTop||document.body.scrollTop;
+			if(osTop>=clientHeight/2){
+				obtn.style.display='block';
+			}else{
+				obtn.style.display='none';
+			}
+			if(!isTop){
+				clearInterval(time);
+			}
+			isTop=false;
+		}
+
+		obtn.onclick=function(){
+			//点击事件
+			if(cancelScroll == false) {
+				time=setInterval(function(){
+					var osTop=document.documentElement.scrollTop||document.body.scrollTop;
+					var ispeed=Math.floor(-osTop/10);
+					document.documentElement.scrollTop=document.body.scrollTop=osTop+ispeed;
+					isTop=true;
+					if(osTop==0){
+						clearInterval(time);
+					}
+				},30);
+			}else {
+				clearInterval(time);
+				cancelScroll = true;
+			}
+		}
+	}
 </script>
 
 
